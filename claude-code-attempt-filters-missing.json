@@ -1,0 +1,395 @@
+{
+  "name": "שיעור 5 - מטלה 1 - אוטומציית סטודיו פילאטיס",
+  "flow": [
+    {
+      "id": 1,
+      "module": "fillout:newSubmission",
+      "version": 1,
+      "root": true,
+      "parameters": {
+        "__IMTHOOK__": 3085805
+      },
+      "mapper": {},
+      "metadata": {
+        "restore": {
+          "parameters": {
+            "__IMTHOOK__": { "data": { "editable": "false" }, "label": "My Submission webhook" }
+          }
+        }
+      }
+    },
+    {
+      "id": 16,
+      "module": "ai-tools:Ask",
+      "version": 2,
+      "parameters": {
+        "model": "medium",
+        "makeConnectionId": 7377199
+      },
+      "mapper": {
+        "input": "אתה יועץ עסקי בתחום הפיטנס.\r\nתן המלצה קצרה (2-3 משפטים) למנהלת הסניף איך לגשת ללקוח הזה -\r\nאיזה סוג אימון יתאים לו ואיזה גישה תקשורתית. התשובה צריכה להיות ממוקדת ומעשית\n\"תשובה לשאלה \"ספר.י לנו קצת על עצמך\":\n{{1.answers.`91bL`}}\n\"תשובה לשאלה \"מה המטרות שלך בהצטרפות לסטודיו שלנו?\":\n{{1.answers.`3fM9`}}\nתשובה לשאלה \"באיזה תדירות את.ה מתאמנ.ת היום?\": \n{{1.answers.cvXK}}"
+      },
+      "metadata": {
+        "restore": {
+          "parameters": {
+            "model": { "mode": "chose", "label": "Medium – A balanced, quick choice for clearly defined tasks needing reliable answers rather than deep analysis", "nested": [] },
+            "makeConnectionId": { "data": { "scoped": "true", "connection": "ai-provider" }, "label": "ניתוח נתוני לקוח - AI" }
+          }
+        },
+        "connection": { "id": 7377199, "label": "ניתוח נתוני לקוח - AI", "app": "ai-provider" }
+      }
+    },
+    {
+      "id": 2,
+      "module": "builtin:BasicRouter",
+      "version": 1,
+      "mapper": null,
+      "routes": [
+        {
+          "label": "חיפה",
+          "filter": {
+            "name": "חיפה",
+            "conditions": [[{ "a": "{{1.answers.mJXf}}", "b": "חיפה", "o": "text:equal" }]]
+          },
+          "flow": [
+            {
+              "id": 3,
+              "module": "util:SetVariables",
+              "version": 1,
+              "parameters": {},
+              "mapper": {
+                "scope": "roundtrip",
+                "variables": [
+                  { "name": "תאריך ושעה", "value": "{{1.submissionTime}}" },
+                  { "name": "סניף", "value": "{{1.answers.mJXf}}" },
+                  { "name": "שם המנהלת", "value": "צביה" },
+                  { "name": "מייל המנהלת", "value": "ndzb.sudio@gmail.com" },
+                  { "name": "שם מלא", "value": "{{1.answers.gRdQ}}" },
+                  { "name": "מספר טלפון", "value": "{{replace(1.answers.jZXJ; \"/[^0-9]/g\"; emptystring)}}" },
+                  { "name": "רמה", "value": "{{1.answers.qhc1}}" }
+                ]
+              },
+              "metadata": { "restore": { "expect": { "scope": { "label": "One cycle" }, "variables": { "items": [null, null, null, null, null, null, null] } } } }
+            },
+            {
+              "id": 8,
+              "module": "google-sheets:addRow",
+              "version": 2,
+              "parameters": { "__IMTCONN__": 12431344 },
+              "mapper": {
+                "from": "drive",
+                "mode": "select",
+                "values": {
+                  "0": "{{3.`תאריך ושעה`}}",
+                  "1": "{{3.`שם מלא`}}",
+                  "2": "{{3.`מספר טלפון`}}",
+                  "3": "{{3.`סניף`}}",
+                  "4": "{{3.`רמה`}}",
+                  "5": "ניתוח מאפייני לקוח לפי AI: {{16.answer}}"
+                },
+                "sheetId": "רשימת מתעניינים",
+                "spreadsheetId": "/1CNbYov9cezF_MCFO7dUx9USXDBo74gf08E1lo5rEf2Q",
+                "includesHeaders": true,
+                "insertDataOption": "INSERT_ROWS",
+                "useColumnHeaders": false,
+                "valueInputOption": "USER_ENTERED",
+                "insertUnformatted": false
+              },
+              "metadata": {
+                "restore": {
+                  "expect": {
+                    "from": { "label": "My Drive" },
+                    "mode": { "label": "Search by path" },
+                    "sheetId": { "label": "רשימת מתעניינים" },
+                    "spreadsheetId": { "path": ["AIDO שיעור 5 -מטלה 1 - סטודיו פילאטיס "] },
+                    "includesHeaders": { "label": "Yes" },
+                    "insertDataOption": { "mode": "chose", "label": "Insert rows" },
+                    "useColumnHeaders": { "label": "No" },
+                    "valueInputOption": { "mode": "chose", "label": "User entered" },
+                    "insertUnformatted": { "mode": "chose" }
+                  },
+                  "parameters": { "__IMTCONN__": { "data": { "scoped": "true", "connection": "google" }, "label": "Nd's Google connection" } }
+                },
+                "connection": { "id": 12431344, "label": "Nd's Google connection", "app": "google" }
+              }
+            },
+            {
+              "id": 12,
+              "module": "google-email:sendAnEmail",
+              "version": 4,
+              "parameters": { "__IMTCONN__": 7154528 },
+              "mapper": {
+                "to": ["{{3.`מייל המנהלת`}}"],
+                "subject": "רשימת מתעניינים סניף {{3.`סניף`}}",
+                "bodyType": "collection",
+                "contents": [
+                  { "text": "{{3.`תאריך ושעה`}}", "image": {} },
+                  { "text": "{{3.`סניף`}}", "image": {} },
+                  { "text": "{{1.answers.gRdQ}}", "image": {} },
+                  { "text": "{{1.answers.jZXJ}}", "image": {} },
+                  { "text": "{{1.answers.qhc1}}", "image": {} },
+                  { "text": "ניתוח מאפייני לקוח לפי AI{{16.answer}}", "image": {} }
+                ]
+              },
+              "metadata": {
+                "restore": {
+                  "expect": {
+                    "cc": { "mode": "chose" },
+                    "to": { "mode": "chose", "items": [null] },
+                    "bcc": { "mode": "chose" },
+                    "from": { "mode": "chose" },
+                    "bodyType": { "label": "Collection of contents (text, images, etc.)" },
+                    "contents": { "mode": "chose", "items": [null, null, null, null, null, null] },
+                    "signature": { "mode": "edit" },
+                    "attachments": { "mode": "chose" },
+                    "emailHeaders": { "mode": "chose" }
+                  },
+                  "parameters": { "__IMTCONN__": { "data": { "scoped": "true", "connection": "google-email" }, "label": "My Gmail connection (ndzb.sudio@gmail.com)" } }
+                },
+                "connection": { "id": 7154528, "label": "My Gmail connection", "app": "google-email" }
+              }
+            }
+          ]
+        },
+        {
+          "label": "תל-אביב",
+          "filter": {
+            "name": "תל-אביב",
+            "conditions": [[{ "a": "{{1.answers.mJXf}}", "b": "תל-אביב", "o": "text:equal" }]]
+          },
+          "flow": [
+            {
+              "id": 4,
+              "module": "util:SetVariables",
+              "version": 1,
+              "parameters": {},
+              "mapper": {
+                "scope": "roundtrip",
+                "variables": [
+                  { "name": "תאריך ושעה", "value": "{{1.submissionTime}}" },
+                  { "name": "סניף", "value": "{{1.answers.mJXf}}" },
+                  { "name": "שם המנהלת", "value": "צביה" },
+                  { "name": "מייל המנהלת", "value": "ndzb.sudio@gmail.com" },
+                  { "name": "שם מלא", "value": "{{1.answers.gRdQ}}" },
+                  { "name": "מספר טלפון", "value": "{{replace(1.answers.jZXJ; \"/[^0-9]/g\"; emptystring)}}" },
+                  { "name": "רמה", "value": "{{1.answers.qhc1}}" }
+                ]
+              },
+              "metadata": { "restore": { "expect": { "scope": { "label": "One cycle" }, "variables": { "items": [null, null, null, null, null, null, null] } } } }
+            },
+            {
+              "id": 10,
+              "module": "google-sheets:addRow",
+              "version": 2,
+              "parameters": { "__IMTCONN__": 12432771 },
+              "mapper": {
+                "from": "drive",
+                "mode": "select",
+                "values": {
+                  "0": "{{4.`תאריך ושעה`}}",
+                  "1": "{{4.`שם מלא`}}",
+                  "2": "{{4.`מספר טלפון`}}",
+                  "3": "{{4.`סניף`}}",
+                  "4": "{{4.`רמה`}}",
+                  "5": "ניתוח מאפייני לקוח לפי AI: {{16.answer}}"
+                },
+                "sheetId": "רשימת מתעניינים",
+                "spreadsheetId": "/1CNbYov9cezF_MCFO7dUx9USXDBo74gf08E1lo5rEf2Q",
+                "includesHeaders": true,
+                "insertDataOption": "INSERT_ROWS",
+                "useColumnHeaders": false,
+                "valueInputOption": "USER_ENTERED",
+                "insertUnformatted": false
+              },
+              "metadata": {
+                "restore": {
+                  "expect": {
+                    "from": { "label": "My Drive" },
+                    "mode": { "label": "Search by path" },
+                    "sheetId": { "label": "רשימת מתעניינים" },
+                    "spreadsheetId": { "path": ["AIDO שיעור 5 -מטלה 1 - סטודיו פילאטיס "] },
+                    "includesHeaders": { "label": "Yes" },
+                    "insertDataOption": { "mode": "chose", "label": "Insert rows" },
+                    "useColumnHeaders": { "label": "No" },
+                    "valueInputOption": { "mode": "chose", "label": "User entered" },
+                    "insertUnformatted": { "mode": "chose" }
+                  },
+                  "parameters": { "__IMTCONN__": { "data": { "scoped": "true", "connection": "google" }, "label": "Nd's Google connection ndzb.sudio@gmail.com" } }
+                },
+                "connection": { "id": 12432771, "label": "Nd's Google connection", "app": "google" }
+              }
+            },
+            {
+              "id": 14,
+              "module": "google-email:sendAnEmail",
+              "version": 4,
+              "parameters": { "__IMTCONN__": 7154528 },
+              "mapper": {
+                "to": ["{{4.`מייל המנהלת`}}"],
+                "subject": " רשימת מתעניינים סניף תל-אביב",
+                "bodyType": "collection",
+                "contents": [
+                  { "text": "{{4.`תאריך ושעה`}}", "image": {} },
+                  { "text": "{{4.`שם מלא`}}", "image": {} },
+                  { "text": "{{4.`מספר טלפון`}}", "image": {} },
+                  { "text": "{{4.`סניף`}}", "image": {} },
+                  { "text": "{{4.`רמה`}}", "image": {} },
+                  { "text": "ניתוח מאפייני לקוח לפי AI: {{16.answer}}", "image": {} }
+                ]
+              },
+              "metadata": {
+                "restore": {
+                  "expect": {
+                    "cc": { "mode": "chose" },
+                    "to": { "mode": "chose", "items": [null] },
+                    "bcc": { "mode": "chose" },
+                    "from": { "mode": "chose", "label": "Empty" },
+                    "bodyType": { "label": "Collection of contents (text, images, etc.)" },
+                    "contents": { "mode": "chose", "items": [null, null, null, null, null, null] },
+                    "signature": { "mode": "edit" },
+                    "attachments": { "mode": "chose" },
+                    "emailHeaders": { "mode": "chose" }
+                  },
+                  "parameters": { "__IMTCONN__": { "data": { "scoped": "true", "connection": "google-email" }, "label": "My Gmail connection ndzb.sudio@gmail.com" } }
+                },
+                "connection": { "id": 7154528, "label": "My Gmail connection", "app": "google-email" }
+              }
+            }
+          ]
+        },
+        {
+          "label": "ירושלים",
+          "filter": {
+            "name": "ירושלים",
+            "conditions": [[{ "a": "{{1.answers.mJXf}}", "b": "ירושלים", "o": "text:equal" }]]
+          },
+          "flow": [
+            {
+              "id": 5,
+              "module": "util:SetVariables",
+              "version": 1,
+              "parameters": {},
+              "mapper": {
+                "scope": "roundtrip",
+                "variables": [
+                  { "name": "תאריך ושעה", "value": "{{1.submissionTime}}" },
+                  { "name": "סניף", "value": "{{1.answers.mJXf}}" },
+                  { "name": "שם המנהלת", "value": "צביה" },
+                  { "name": "מייל המנהלת", "value": "ndzb.sudio@gmail.com" },
+                  { "name": "שם מלא", "value": "{{1.answers.gRdQ}}" },
+                  { "name": "מספר טלפון", "value": "{{replace(1.answers.jZXJ; \"/[^0-9]/g\"; emptystring)}}" },
+                  { "name": "רמה", "value": "{{1.answers.qhc1}}" }
+                ]
+              },
+              "metadata": { "restore": { "expect": { "scope": { "label": "One cycle" }, "variables": { "items": [null, null, null, null, null, null, null] } } } }
+            },
+            {
+              "id": 11,
+              "module": "google-sheets:addRow",
+              "version": 2,
+              "parameters": { "__IMTCONN__": 12432777 },
+              "mapper": {
+                "from": "drive",
+                "mode": "select",
+                "values": {
+                  "0": "{{5.`תאריך ושעה`}}",
+                  "1": "{{5.`שם מלא`}}",
+                  "2": "{{5.`מספר טלפון`}}",
+                  "3": "{{5.`סניף`}}",
+                  "4": "{{5.`רמה`}}",
+                  "5": "ניתוח מאפייני לקוח לפי AI: {{16.answer}}"
+                },
+                "sheetId": "רשימת מתעניינים",
+                "spreadsheetId": "/1CNbYov9cezF_MCFO7dUx9USXDBo74gf08E1lo5rEf2Q",
+                "includesHeaders": true,
+                "insertDataOption": "INSERT_ROWS",
+                "useColumnHeaders": false,
+                "valueInputOption": "USER_ENTERED",
+                "insertUnformatted": false
+              },
+              "metadata": {
+                "restore": {
+                  "expect": {
+                    "from": { "label": "My Drive" },
+                    "mode": { "label": "Search by path" },
+                    "sheetId": { "label": "רשימת מתעניינים" },
+                    "spreadsheetId": { "path": ["AIDO שיעור 5 -מטלה 1 - סטודיו פילאטיס "] },
+                    "includesHeaders": { "label": "Yes" },
+                    "insertDataOption": { "mode": "chose", "label": "Insert rows" },
+                    "useColumnHeaders": { "label": "No" },
+                    "valueInputOption": { "mode": "chose", "label": "User entered" },
+                    "insertUnformatted": { "mode": "chose" }
+                  },
+                  "parameters": { "__IMTCONN__": { "data": { "scoped": "true", "connection": "google" }, "label": "Nd's Google connection ndzb.sudio@gmail.com" } }
+                },
+                "connection": { "id": 12432777, "label": "Nd's Google connection", "app": "google" }
+              }
+            },
+            {
+              "id": 15,
+              "module": "google-email:sendAnEmail",
+              "version": 4,
+              "parameters": { "__IMTCONN__": 7154528 },
+              "mapper": {
+                "to": ["{{5.`מייל המנהלת`}}"],
+                "subject": " רשימת מתעניינים סניף ירושלים",
+                "bodyType": "collection",
+                "contents": [
+                  { "text": "{{5.`תאריך ושעה`}}", "image": { "data": "{{1.submissionTime}}" } },
+                  { "text": "{{5.`שם מלא`}}", "image": { "data": "{{5.`שם מלא`}}" } },
+                  { "text": "{{5.`מספר טלפון`}}", "image": { "data": "{{5.`מספר טלפון`}}" } },
+                  { "text": "{{5.`סניף`}}", "image": { "data": "{{5.`סניף`}}" } },
+                  { "text": "{{5.`רמה`}}", "image": { "data": "{{5.`רמה`}}" } },
+                  { "text": "ניתוח מאפייני לקוח לפי AI: {{16.answer}}", "image": {} }
+                ]
+              },
+              "metadata": {
+                "restore": {
+                  "expect": {
+                    "cc": { "mode": "chose" },
+                    "to": { "mode": "chose", "items": [null] },
+                    "bcc": { "mode": "chose" },
+                    "from": { "mode": "chose" },
+                    "bodyType": { "label": "Collection of contents (text, images, etc.)" },
+                    "contents": { "mode": "chose", "items": [{ "image": { "collapsed": true } }, { "image": { "collapsed": true } }, { "text": { "collapsed": true }, "image": { "collapsed": true } }, { "text": { "collapsed": true }, "image": { "collapsed": true } }, { "text": { "collapsed": true }, "image": { "collapsed": true } }, { "text": { "collapsed": true }, "image": { "collapsed": true } }] },
+                    "signature": { "mode": "edit" },
+                    "attachments": { "mode": "chose" },
+                    "emailHeaders": { "mode": "chose" }
+                  },
+                  "parameters": { "__IMTCONN__": { "data": { "scoped": "true", "connection": "google-email" }, "label": "My Gmail connection ndzb.sudio@gmail.com" } }
+                },
+                "connection": { "id": 7154528, "label": "My Gmail connection", "app": "google-email" }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "instant": true,
+    "scenarioId": 7097613,
+    "scenario": {
+      "name": "שיעור 5 - מטלה 1 - אוטומציית סטודיו פילאטיס",
+      "status": "error",
+      "isActive": false,
+      "teamId": 1815940,
+      "lastEdit": "2026-11-19T12:51:04.773Z",
+      "zone": "us2.make.com"
+    },
+    "trigger": {
+      "moduleId": 1,
+      "module": "fillout:newSubmission",
+      "kind": "webhook",
+      "scheduling": { "type": "immediately", "maximum_runs_per_minute": 100 }
+    },
+    "connections": [
+      { "id": 7377199, "label": "ניתוח נתוני לקוח - AI", "app": "ai-provider", "usedByModules": [16], "status": "ok" },
+      { "id": 12431344, "label": "Nd's Google connection", "app": "google", "usedByModules": [8], "status": "ok" },
+      { "id": 7154528, "label": "My Gmail connection", "app": "google-email", "usedByModules": [12, 14, 15], "status": "ok" },
+      { "id": 12432771, "label": "Nd's Google connection", "app": "google", "usedByModules": [10], "status": "ok" },
+      { "id": 12432777, "label": "Nd's Google connection", "app": "google", "usedByModules": [11], "status": "ok" }
+    ],
+    "exportNote": "Reconstructed read-only via Make MCP (scenario_get + scenario_module_get) on 2026-11-19 after connections 10 and 11 were repointed to new Google connections (12432771, 12432777). No write/activate/run action was performed on the scenario."
+  }
+}
