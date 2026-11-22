@@ -1,0 +1,99 @@
+{
+    "name": "שיעור 5 - בונוס 1 - לידים דמה לדאשבורד",
+    "flow": [
+        {
+            "id": 1,
+            "module": "scenario-service:StartSubscenario",
+            "version": 2,
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                }
+            }
+        },
+        {
+            "id": 2,
+            "module": "ai-tools:Ask",
+            "version": 2,
+            "parameters": {
+                "model": "medium",
+                "makeConnectionId": 7377199
+            },
+            "mapper": {
+                "input": "תפקידך ליצור ליד דמה (fake) אחד, מציאותי, לדאשבורד לידים של סטודיו לעיצוב פנים ואדריכלות.\n\nקריטי: להשיב אך ורק בשורה אחת בדיוק, בלי שום טקסט לפני או אחרי, בלי הסברים, בלי כותרת, בלי מירכאות ובלי שורות ריקות - שורה אחת בלבד ותו לא, בפורמט הבא בדיוק, עם 7 ערכים מופרדים בתו \"|\" (פס אנכי), בסדר הזה:\nשם_לקוח|טלפון|מייל|סוג_שירות|סוג_נכס|מקור|שווי_משוער\n\nכללים:\n1. שם_לקוח: שם מלא בעברית, דמיוני.\n2. טלפון: מספר ישראלי בתבנית 0XX-XXX-XXXX (למשל 050-123-4567) או 0X-XXX-XXXX (למשל 02-123-4567).\n3. מייל: בתבנית name@example.com בלבד (דומיין example.com בלבד).\n4. סוג_שירות: אחד בדיוק מהרשימה: תכנון ועיצוב מלא | הלבשת הבית (Home Styling) | חבילת שינויי דיירים | יום קניות מרוכז | פגישת ייעוץ ממוקדת\n5. סוג_נכס: אחד בדיוק מהרשימה: דירת קבלן | שיפוץ כולל | בית פרטי / וילה | חלל מסחרי / קליניקה | ריענון חלל בודד\n6. מקור: אחד בדיוק מהרשימה: אינסטגרם | המלצה מלקוח עבר | אתר הסטודיו | פייסבוק\n7. שווי_משוער: מספר שלם בשקלים בין 5000 ל-80000, בלי סימני פיסוק ובלי מילת 'שקל'.\n\nדוגמה לפורמט התשובה היחיד שמותר להחזיר (לא להשתמש בערכים האלה בפועל, רק להדגים פורמט - ואסור להוסיף שום דבר לפני או אחרי השורה):\nנועה כהן|050-123-4567|noa.cohen@example.com|תכנון ועיצוב מלא|בית פרטי / וילה|אינסטגרם|32000"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                }
+            }
+        },
+        {
+            "id": 3,
+            "module": "airtable:ActionCreateRecord",
+            "version": 3,
+            "parameters": {
+                "__IMTCONN__": 12479070
+            },
+            "mapper": {
+                "base": "appalrhsMWUHdI6o0",
+                "table": "tblG87RgaMyIp16YH",
+                "record": {
+                    "fld5Vo8wy7UIYeGlE": "{{trim(get(split(2.answer; \"|\"); 4))}}",
+                    "fldF7oKsVt7yOilb0": "{{trim(get(split(2.answer; \"|\"); 2))}}",
+                    "fldIPFzTgObEjdJot": "{{trim(get(split(2.answer; \"|\"); 3))}}",
+                    "fldKdj1BqGHbjKq75": "{{parseNumber(trim(get(split(2.answer; \"|\"); 7)); \".\")}}",
+                    "fldMxYbouhH3dEEJR": "{{trim(get(split(2.answer; \"|\"); 1))}}",
+                    "fldOXbkq7OSPz9jQD": "{{trim(get(split(2.answer; \"|\"); 6))}}",
+                    "fldcHc8qz7bpRv3aK": "{{formatDate(now; \"YYYY-MM-DD\")}}",
+                    "fldenlWCA4D7EKvL9": "{{trim(get(split(2.answer; \"|\"); 5))}}",
+                    "fldvxF7HjXqfAo1BY": "פנייה חדשה"
+                },
+                "typecast": false,
+                "useColumnId": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "restore": {
+                    "mapper": {
+                        "base": {
+                            "label": "Studio Leads Dashboard"
+                        },
+                        "table": {
+                            "label": "Leads"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Airtable - Studio Leads Dashboard"
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us2.make.com",
+        "notes": []
+    }
+}
