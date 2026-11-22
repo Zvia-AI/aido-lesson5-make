@@ -1,0 +1,1130 @@
+{
+    "name": "שיעור 5 - בונוס 2 - עיבוד מסמכים מג'ימייל (מותאם)",
+    "flow": [
+        {
+            "id": 1,
+            "module": "google-email:triggerWatchNewEmails",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 12480654,
+                "filterType": "gmailSearch",
+                "format": "full",
+                "q": "has:attachment filename:pdf",
+                "markSeen": false,
+                "limit": 10
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "setupValidation": {
+                    "version": 1,
+                    "configuration": "65445aa9eddbda06",
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    }
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Nd's Gmail connectionndzb.sudio@gmail.com",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google-email"
+                            }
+                        },
+                        "filterType": {
+                            "label": "Gmail filter"
+                        },
+                        "format": {
+                            "label": "Full content"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google-email",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "filterType",
+                        "type": "select",
+                        "label": "Filter type",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "simpleSearch",
+                                "gmailSearch"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "type": "select",
+                        "label": "Content format",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "full",
+                                "raw",
+                                "metadata",
+                                "minimal"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "type": "text",
+                        "label": "Query"
+                    },
+                    {
+                        "name": "markSeen",
+                        "type": "boolean",
+                        "label": "Mark email message(s) as read when fetched"
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit",
+                        "validate": {
+                            "max": 500
+                        },
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "Message ID"
+                    },
+                    {
+                        "name": "threadId",
+                        "type": "text",
+                        "label": "Thread ID"
+                    },
+                    {
+                        "name": "internalDate",
+                        "type": "date",
+                        "label": "Date"
+                    },
+                    {
+                        "name": "subject",
+                        "type": "text",
+                        "label": "Subject",
+                        "condition": true
+                    },
+                    {
+                        "name": "fromName",
+                        "type": "text",
+                        "label": "From (name)",
+                        "condition": true
+                    },
+                    {
+                        "name": "fromEmail",
+                        "type": "text",
+                        "label": "From (email)",
+                        "condition": true
+                    },
+                    {
+                        "name": "to",
+                        "spec": {
+                            "spec": [
+                                {
+                                    "name": "name",
+                                    "type": "text",
+                                    "label": "Name"
+                                },
+                                {
+                                    "name": "email",
+                                    "type": "text",
+                                    "label": "Email"
+                                }
+                            ],
+                            "type": "collection"
+                        },
+                        "type": "array",
+                        "label": "To",
+                        "condition": true
+                    },
+                    {
+                        "name": "cc",
+                        "spec": [
+                            {
+                                "name": "email",
+                                "type": "email",
+                                "label": "Email"
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "CC",
+                        "condition": true
+                    },
+                    {
+                        "name": "bcc",
+                        "spec": [
+                            {
+                                "name": "email",
+                                "type": "email",
+                                "label": "Email"
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "BCC",
+                        "condition": true
+                    },
+                    {
+                        "name": "snippet",
+                        "type": "text",
+                        "label": "Snippet"
+                    },
+                    {
+                        "name": "fullTextBody",
+                        "type": "text",
+                        "label": "Full text body",
+                        "condition": true
+                    },
+                    {
+                        "name": "htmlBody",
+                        "type": "text",
+                        "label": "HTML body",
+                        "condition": true
+                    },
+                    {
+                        "name": "hasAttachment",
+                        "type": "boolean",
+                        "label": "Has attachment",
+                        "condition": true
+                    },
+                    {
+                        "name": "hasMedia",
+                        "type": "boolean",
+                        "label": "Has media",
+                        "condition": true
+                    },
+                    {
+                        "name": "sysFolders",
+                        "spec": [
+                            {
+                                "name": "id",
+                                "type": "text",
+                                "label": "System folder ID"
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "System folder name"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "System folders"
+                    },
+                    {
+                        "name": "categoryFolders",
+                        "spec": [
+                            {
+                                "name": "id",
+                                "type": "text",
+                                "label": "Category folder ID"
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Category folder name"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Category folders"
+                    },
+                    {
+                        "name": "userLabelFolders",
+                        "spec": [
+                            {
+                                "name": "id",
+                                "type": "text",
+                                "label": "User label folder ID"
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "User label folder name"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "User label folders"
+                    },
+                    {
+                        "name": "labelIds",
+                        "spec": {
+                            "type": "text"
+                        },
+                        "type": "array",
+                        "label": "Message folder IDs"
+                    },
+                    {
+                        "name": "headers",
+                        "spec": [
+                            {
+                                "name": "Delivered-To",
+                                "type": "text",
+                                "label": "Delivered-To"
+                            },
+                            {
+                                "name": "Received",
+                                "type": "text",
+                                "label": "Received"
+                            },
+                            {
+                                "name": "Date",
+                                "type": "text",
+                                "label": "Date (header)"
+                            },
+                            {
+                                "name": "X-Original-Sender",
+                                "type": "text"
+                            },
+                            {
+                                "name": "Reply-To",
+                                "type": "text"
+                            },
+                            {
+                                "name": "Subject",
+                                "type": "text",
+                                "label": "Subject"
+                            },
+                            {
+                                "name": "From",
+                                "type": "text",
+                                "label": "From"
+                            },
+                            {
+                                "name": "To",
+                                "type": "text",
+                                "label": "To"
+                            },
+                            {
+                                "name": "Message-ID",
+                                "type": "text",
+                                "label": "Message-ID"
+                            },
+                            {
+                                "name": "In-Reply-To",
+                                "type": "text",
+                                "label": "In-Reply-To"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Headers",
+                        "condition": true
+                    },
+                    {
+                        "name": "sizeEstimate",
+                        "type": "number",
+                        "label": "Size estimate"
+                    },
+                    {
+                        "name": "historyId",
+                        "type": "text",
+                        "label": "History ID"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "google-email:listEmailAttachments",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 12431364
+            },
+            "mapper": {
+                "messageId": "{{1.id}}",
+                "include": [
+                    "attachment"
+                ],
+                "returnAttachmentData": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0,
+                    "name": "List Attachments"
+                },
+                "setupValidation": {
+                    "version": 1,
+                    "configuration": "c669897936bb5b5e",
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    }
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Nd's Gmail connectionndzb.sudio@gmail.com",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google-email"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "include": {
+                            "mode": "chose"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google-email",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "messageId",
+                        "type": "text",
+                        "label": "Message ID",
+                        "required": true
+                    },
+                    {
+                        "name": "include",
+                        "type": "select",
+                        "label": "Include",
+                        "required": true,
+                        "multiple": true,
+                        "validate": {
+                            "enum": [
+                                "attachment",
+                                "media"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "returnAttachmentData",
+                        "type": "boolean",
+                        "label": "Return media or attachment file data",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 9,
+            "module": "pdf-vector:parseDocument",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 12480745
+            },
+            "mapper": {
+                "file": "{{2.data}}",
+                "fileName": "{{2.filename}}",
+                "model": "auto",
+                "includePages": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "setupValidation": {
+                    "version": 1,
+                    "configuration": "cdddf32100b25a4c",
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    }
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Nd's PDF Vector connectionglobal.pdfvector.com",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "pdf-vector"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "model": {
+                            "mode": "chose",
+                            "label": "Auto (recommended)"
+                        },
+                        "includePages": {
+                            "mode": "chose"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:pdf-vector",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "url",
+                        "type": "url",
+                        "label": "Document URL"
+                    },
+                    {
+                        "name": "file",
+                        "type": "buffer",
+                        "label": "File"
+                    },
+                    {
+                        "name": "fileName",
+                        "type": "filename",
+                        "label": "File Name"
+                    },
+                    {
+                        "name": "model",
+                        "type": "select",
+                        "label": "Model",
+                        "validate": {
+                            "enum": [
+                                "auto",
+                                "nano",
+                                "mini",
+                                "pro",
+                                "max"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "includePages",
+                        "type": "boolean",
+                        "label": "Page-separated output"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8,
+            "module": "builtin:BasicAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 2
+            },
+            "filter": null,
+            "mapper": {
+                "markdown": "{{9.markdown}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0
+                },
+                "restore": {}
+            },
+            "flags": {
+                "stopIfEmpty": true
+            }
+        },
+        {
+            "id": 4,
+            "module": "ai-tools:Extract",
+            "version": 2,
+            "parameters": {
+                "makeConnectionId": 7377199,
+                "model": "medium"
+            },
+            "mapper": {
+                "input": "{{join(map(8.array; \"markdown\"); newline)}}",
+                "fields": [
+                    {
+                        "name": "client_company_name",
+                        "description": "The client company name shown in the document or sender-provided document content.",
+                        "type": "string"
+                    },
+                    {
+                        "name": "document_type",
+                        "description": "The financial document category, such as Bank Statement, Sales Invoice, Purchase Invoice, Expense Bill, or Other.",
+                        "type": "string"
+                    },
+                    {
+                        "name": "applicable_period",
+                        "description": "The month, quarter, year, or other financial period that this document covers, normalized when possible.",
+                        "type": "string"
+                    },
+                    {
+                        "name": "financial_year",
+                        "description": "The financial year mentioned in the document, if available.",
+                        "type": "string"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0,
+                    "name": "Classify Document"
+                },
+                "setupValidation": {
+                    "version": 1,
+                    "configuration": "8508bed02c46088",
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    }
+                },
+                "restore": {
+                    "parameters": {
+                        "makeConnectionId": {
+                            "label": "ניתוח נתוני לקוח - AI",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "ai-provider"
+                            }
+                        },
+                        "model": {
+                            "mode": "chose",
+                            "nested": [],
+                            "label": "MediumModel: gpt-5-nano. Reasoning: low. A balanced, quick choice for clearly defined tasks needing reliable answers rather than deep analysis"
+                        }
+                    },
+                    "expect": {
+                        "fields": {
+                            "items": [
+                                {
+                                    "type": {
+                                        "mode": "chose",
+                                        "label": "Text"
+                                    }
+                                },
+                                {
+                                    "type": {
+                                        "mode": "chose",
+                                        "label": "Text"
+                                    }
+                                },
+                                {
+                                    "type": {
+                                        "mode": "chose",
+                                        "label": "Text"
+                                    }
+                                },
+                                {
+                                    "type": {
+                                        "mode": "chose",
+                                        "label": "Text"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "makeConnectionId",
+                        "type": "account:ai-provider,openai-gpt-3,anthropic-claude,gemini-ai-q9zyjp,ai-agent-foundry-openai,ai-agent-foundry-non-openai,mistral-ai,cohere,groq,ai-agent-xai,amazon-bedrock,ai-agent-openai-compatible",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "model",
+                        "type": "select",
+                        "label": "Model",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "input",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true
+                    },
+                    {
+                        "name": "fields",
+                        "type": "array",
+                        "label": "Information",
+                        "required": true,
+                        "spec": {
+                            "type": "collection",
+                            "label": "Information",
+                            "spec": [
+                                {
+                                    "name": "name",
+                                    "type": "text",
+                                    "label": "Name",
+                                    "required": true
+                                },
+                                {
+                                    "name": "description",
+                                    "type": "text",
+                                    "label": "Description",
+                                    "required": true
+                                },
+                                {
+                                    "name": "type",
+                                    "type": "select",
+                                    "label": "Type",
+                                    "required": true,
+                                    "options": [
+                                        {
+                                            "label": "Text",
+                                            "value": "string"
+                                        },
+                                        {
+                                            "label": "Number",
+                                            "value": "number"
+                                        },
+                                        {
+                                            "label": "Boolean",
+                                            "value": "boolean"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "name": "value"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "datastore:ExistRecord",
+            "version": 1,
+            "parameters": {
+                "datastore": 208321
+            },
+            "mapper": {
+                "key": "{{1.id}}|{{md5(join(map(8.array; \"markdown\"); newline))}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1500,
+                    "y": 0,
+                    "name": "Check Duplicate"
+                },
+                "setupValidation": {
+                    "version": 1,
+                    "configuration": "ea666c560a010a01",
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    }
+                },
+                "restore": {
+                    "parameters": {
+                        "datastore": {
+                            "label": "Client Document Deduplication"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "datastore",
+                        "type": "datastore",
+                        "label": "Data store",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "key",
+                        "type": "text",
+                        "label": "Key",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "module": "datastore:AddRecord",
+            "version": 1,
+            "parameters": {
+                "datastore": 208321
+            },
+            "filter": {
+                "name": "Only new documents",
+                "conditions": [
+                    [
+                        {
+                            "a": "{{5.exist}}",
+                            "o": "boolean:equal",
+                            "b": "false"
+                        }
+                    ]
+                ]
+            },
+            "mapper": {
+                "key": "{{1.id}}|{{md5(join(map(8.array; \"markdown\"); newline))}}",
+                "overwrite": false,
+                "data": {
+                    "gmailMessageId": "{{1.id}}",
+                    "attachmentId": "{{md5(join(map(8.array; \"markdown\"); newline))}}",
+                    "filename": "{{1.subject}}",
+                    "receivedAt": "{{1.internalDate}}",
+                    "status": "Received"
+                }
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1800,
+                    "y": 0,
+                    "name": "Store Document Key"
+                },
+                "setupValidation": {
+                    "version": 1,
+                    "configuration": "6eb1ff7e6ae89bac",
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    }
+                },
+                "restore": {
+                    "parameters": {
+                        "datastore": {
+                            "label": "Client Document Deduplication"
+                        }
+                    },
+                    "expect": {
+                        "overwrite": {
+                            "mode": "chose"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "datastore",
+                        "type": "datastore",
+                        "label": "Data store",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "key",
+                        "type": "text",
+                        "label": "Key"
+                    },
+                    {
+                        "name": "overwrite",
+                        "type": "boolean",
+                        "label": "Overwrite an existing record",
+                        "required": true
+                    },
+                    {
+                        "name": "data",
+                        "type": "collection",
+                        "label": "Record",
+                        "spec": [
+                            {
+                                "name": "gmailMessageId",
+                                "type": "text",
+                                "label": null
+                            },
+                            {
+                                "name": "attachmentId",
+                                "type": "text",
+                                "label": null
+                            },
+                            {
+                                "name": "filename",
+                                "type": "text",
+                                "label": null
+                            },
+                            {
+                                "name": "receivedAt",
+                                "type": "date",
+                                "label": null
+                            },
+                            {
+                                "name": "status",
+                                "type": "text",
+                                "label": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7,
+            "module": "google-sheets:addRow",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 12431279
+            },
+            "mapper": {
+                "mode": "select",
+                "insertUnformatted": false,
+                "valueInputOption": "USER_ENTERED",
+                "insertDataOption": "INSERT_ROWS",
+                "from": "drive",
+                "spreadsheetId": "/1C3FusOqLwdK6wkDS-WCKAIWRq0ZVR5oF5LoIH_P69C8",
+                "sheetId": "Received Documents",
+                "includesHeaders": true,
+                "useColumnHeaders": true,
+                "values": {
+                    "Client Name": "{{4.information.client_company_name}}",
+                    "Document Type": "{{4.information.document_type}}",
+                    "Month / Period": "{{4.information.applicable_period}}",
+                    "Sender Email": "{{1.fromEmail}}",
+                    "Status": "Received",
+                    "File Name": "{{1.subject}}",
+                    "Received At": "{{1.internalDate}}"
+                }
+            },
+            "metadata": {
+                "designer": {
+                    "x": 2100,
+                    "y": 0,
+                    "name": "Save Received Document"
+                },
+                "setupValidation": {
+                    "version": 1,
+                    "configuration": "f9a49631e7b43b91",
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    }
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Nd's Google connectionndzb.sudio@gmail.com",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "mode": {
+                            "label": "Search by path"
+                        },
+                        "insertUnformatted": {
+                            "mode": "chose"
+                        },
+                        "valueInputOption": {
+                            "mode": "chose",
+                            "label": "User entered"
+                        },
+                        "insertDataOption": {
+                            "mode": "chose",
+                            "label": "Insert rows"
+                        },
+                        "from": {
+                            "label": "My Drive"
+                        },
+                        "spreadsheetId": {
+                            "path": [
+                                "שיעור 5 - בונוס 2 - מסמכים שהתקבלו"
+                            ]
+                        },
+                        "sheetId": {
+                            "label": "Received Documents"
+                        },
+                        "includesHeaders": {
+                            "label": "Yes"
+                        },
+                        "useColumnHeaders": {
+                            "label": "Yes"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "mode",
+                        "type": "select",
+                        "label": "Search Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "select",
+                                "fromAll",
+                                "map"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "insertUnformatted",
+                        "type": "boolean",
+                        "label": "Unformatted",
+                        "required": true
+                    },
+                    {
+                        "name": "valueInputOption",
+                        "type": "select",
+                        "label": "Value input option",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "USER_ENTERED",
+                                "RAW"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "insertDataOption",
+                        "type": "select",
+                        "label": "Insert data option",
+                        "validate": {
+                            "enum": [
+                                "INSERT_ROWS",
+                                "OVERWRITE"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "type": "select",
+                        "label": "Drive",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "spreadsheetId",
+                        "type": "file",
+                        "label": "Spreadsheet Name",
+                        "required": true
+                    },
+                    {
+                        "name": "sheetId",
+                        "type": "select",
+                        "label": "Sheet Name",
+                        "required": true
+                    },
+                    {
+                        "name": "includesHeaders",
+                        "type": "select",
+                        "label": "Table contains headers",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    },
+                    {
+                        "name": "useColumnHeaders",
+                        "type": "select",
+                        "label": "Use column headers as IDs of the columns",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    },
+                    {
+                        "name": "values",
+                        "type": "collection",
+                        "label": "Values in columns",
+                        "metadata": [
+                            [
+                                [
+                                    "Client Name",
+                                    "Document Type",
+                                    "Month / Period",
+                                    "Sender Email",
+                                    "Status",
+                                    "File Name",
+                                    "Received At"
+                                ]
+                            ]
+                        ],
+                        "spec": [
+                            {
+                                "name": "Client Name",
+                                "type": "text",
+                                "label": "Client Name (A)"
+                            },
+                            {
+                                "name": "Document Type",
+                                "type": "text",
+                                "label": "Document Type (B)"
+                            },
+                            {
+                                "name": "Month / Period",
+                                "type": "text",
+                                "label": "Month / Period (C)"
+                            },
+                            {
+                                "name": "Sender Email",
+                                "type": "text",
+                                "label": "Sender Email (D)"
+                            },
+                            {
+                                "name": "Status",
+                                "type": "text",
+                                "label": "Status (E)"
+                            },
+                            {
+                                "name": "File Name",
+                                "type": "text",
+                                "label": "File Name (F)"
+                            },
+                            {
+                                "name": "Received At",
+                                "type": "text",
+                                "label": "Received At (G)"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us2.make.com",
+        "notes": []
+    }
+}
